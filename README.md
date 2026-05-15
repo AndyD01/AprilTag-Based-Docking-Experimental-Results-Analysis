@@ -58,7 +58,7 @@ The undock mechanism, by contrast, demonstrated perfect reliability across all 1
 | output_a | 14 | 13 | 1 | 93% | 53.0 | 0.574 | 0.739 |
 | output_b | 11 | 8 | 3 | 73% | 40.2 | 0.622 | 0.674 |
 
-![Fig. 1 — Success rate per dock station with Wilson 95% CI](figures/fig1_success_rate.png)
+![Fig. 1 — Success rate per dock station with Wilson 95% CI](fig1_success_rate.png)
 
 Two patterns are immediately visible. First, **output_b is the weakest station** at 73% success (3 failures). Its failures span both FAILED_TO_STAGE (903) and FAILED_TO_DETECT_DOCK (904), suggesting a combination of approach geometry and tag visibility problems at that location. Second, **output_a achieved the highest success among non-trivial docks** (93%, only 1 failure), likely benefiting from a favorable approach corridor and tag placement.
 
@@ -77,7 +77,7 @@ Six `test_full_ap` missions were executed; each mission traverses 4 docks sequen
 | B-05 | 1/2 | 236 s | FAIL | output_a: FAILED_TO_STAGE (903) |
 | B-06 | 4/4 | 316 s | PASS | — |
 
-![Fig. 5 — Multi-dock mission timeline](figures/fig5_mission_timeline.png)
+![Fig. 5 — Multi-dock mission timeline](fig5_mission_timeline.png)
 
 **Mission-level success rate: 3/6 (50%).** Considering only the 5 structurally valid missions (excluding B-02), the rate is 3/5 (60%). The completed missions took a median of 360 s (range: 316–454 s) for the full 4-dock circuit.
 
@@ -91,7 +91,7 @@ The two failed missions confirm the per-station pattern: output_b and output_a a
 
 Position error, measured via TF lookup (Euclidean distance base_link → tag frame in XY), ranges from 0.545 m to 0.802 m across all 46 successful docks, with a median of 0.618 m.
 
-![Fig. 2 — Position error box plot per dock station](figures/fig2_pos_error_boxplot.png)
+![Fig. 2 — Position error box plot per dock station](fig2_pos_error_boxplot.png)
 
 A Shapiro-Wilk test rejects normality (W=0.938, p=0.017), confirming the use of median and IQR rather than mean ± SD throughout this analysis. Kruskal-Wallis testing reveals a statistically significant difference in position error across dock stations (H=23.41, p=0.0001). Pairwise Mann-Whitney U tests identify the primary contrasts: home and output_a form a lower-error cluster (median 0.569–0.574 m), while input_a and output_b form a higher-error cluster (median 0.670–0.622 m). This grouping aligns with the physical layout: the input stations require the robot to approach with a 180° heading toward a wall-mounted tag, which limits the final approach corridor.
 
@@ -105,7 +105,7 @@ The position error standard deviation within each dock station is low: 0.018 m f
 
 The raw angular error (TF yaw base_link → tag minus `approach_yaw` from the dock database) shows systematic offsets of approximately +90° for input stations and −90° for output stations. This is not a docking error — it is an artifact of the AprilTag coordinate frame convention, where the tag's Z-axis points perpendicular to the tag surface (toward the approaching robot), creating a fixed ~90° rotation relative to the approach heading in the map frame.
 
-![Fig. 4 — Angular repeatability: raw (left) vs offset-corrected (right)](figures/fig4_angular_repeatability.png)
+![Fig. 4 — Angular repeatability: raw (left) vs offset-corrected (right)](fig4_angular_repeatability.png)
 
 After subtracting each dock's mean angular offset, the per-dock angular scatter standard deviations are:
 
@@ -123,13 +123,13 @@ These values demonstrate that the robot consistently arrives within ±5° of the
 
 ## 4. Docking Duration Analysis
 
-![Fig. 3 — Duration box plot per dock station](figures/fig3_duration_boxplot.png)
+![Fig. 3 — Duration box plot per dock station](fig3_duration_boxplot.png)
 
 Docking durations show substantial variability both within and across stations. The fastest docks complete in ~30 s (output_a, output_b), while the slowest reach 200+ s (input_b). This bimodal behavior likely reflects two distinct scenarios: (1) clean approach where the robot navigates directly to the staging pose and completes the final approach in one attempt, and (2) recovery approach where the initial staging fails, Nav2 replans, and the robot requires additional maneuvers before the dock controller converges.
 
 The duration has no significant correlation with position error (Pearson r computed in Fig. 7), confirming that longer docks do not produce worse accuracy — they simply take longer to converge.
 
-![Fig. 7 — Position error vs duration scatter](figures/fig7_scatter_pos_duration.png)
+![Fig. 7 — Position error vs duration scatter](fig7_scatter_pos_duration.png)
 
 ---
 
@@ -144,7 +144,7 @@ Eight failures were recorded across 54 dock attempts. Their distribution:
 | FAILED_TO_CONTROL (905) | Controller could not converge | 1 | input_b | C |
 | UNKNOWN | Error code not captured | 1 | input_a | A |
 
-![Fig. 6 — Failure breakdown by error code (left) and dock station (right)](figures/fig6_failure_breakdown.png)
+![Fig. 6 — Failure breakdown by error code (left) and dock station (right)](fig6_failure_breakdown.png)
 
 FAILED_TO_STAGE (903) is the dominant failure mode (4/8), occurring across all four non-home stations. This indicates that the primary reliability bottleneck is not the final docking approach but the **navigation to the staging pose** — the point from which the dock controller takes over. The staging failures are likely caused by Nav2 path planning timeouts or costmap inflation preventing the robot from reaching the designated staging position within the 300 s timeout.
 
@@ -154,7 +154,7 @@ FAILED_TO_DETECT_DOCK (904) occurred exclusively at output_b (2 instances). This
 
 ## 6. Starting-Position Robustness (Block A vs Block C)
 
-![Fig. 8 — Block A (home start) vs Block C (alternative positions)](figures/fig8_block_a_vs_c.png)
+![Fig. 8 — Block A (home start) vs Block C (alternative positions)](fig8_block_a_vs_c.png)
 
 Fisher's exact tests comparing Block A (home start) to Block C (alternative positions) show no statistically significant difference for any dock station:
 
